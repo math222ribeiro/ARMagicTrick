@@ -1,27 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A278a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <arscnView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="BrB-h1-WRS">
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="MagicTrick" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MHc-gV-Vs5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </arscnView>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qhT-le-y5R">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </arscnView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zjv-Dl-u0q">
+                                <rect key="frame" x="16" y="20" width="343" height="26.5"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="contentStretch" x="0.0" y="1" width="0.0" height="1"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ucg-fB-BJR">
+                                <rect key="frame" x="16" y="597" width="120" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="A3T-Fb-EIw"/>
+                                    <constraint firstAttribute="width" constant="120" id="IUd-7u-z83"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" title="Throw Ball"/>
+                                <connections>
+                                    <action selector="didTapThrowBallButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="dPU-qX-oZu"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="qhT-le-y5R" firstAttribute="bottom" secondItem="GXb-iL-4at" secondAttribute="bottom" id="E0d-uZ-JRd"/>
+                            <constraint firstItem="qhT-le-y5R" firstAttribute="trailing" secondItem="GXb-iL-4at" secondAttribute="trailing" id="GK3-I9-sef"/>
+                            <constraint firstItem="qhT-le-y5R" firstAttribute="leading" secondItem="GXb-iL-4at" secondAttribute="leading" id="KW4-hL-Yto"/>
+                            <constraint firstItem="zjv-Dl-u0q" firstAttribute="leading" secondItem="GXb-iL-4at" secondAttribute="leading" constant="16" id="NtU-3V-6Su"/>
+                            <constraint firstItem="zjv-Dl-u0q" firstAttribute="top" secondItem="GXb-iL-4at" secondAttribute="top" id="ce1-9g-boR"/>
+                            <constraint firstItem="GXb-iL-4at" firstAttribute="trailing" secondItem="zjv-Dl-u0q" secondAttribute="trailing" constant="16" id="dKz-fq-eCo"/>
+                            <constraint firstItem="Ucg-fB-BJR" firstAttribute="leading" secondItem="GXb-iL-4at" secondAttribute="leading" constant="16" id="dUH-as-RN8"/>
+                            <constraint firstItem="qhT-le-y5R" firstAttribute="top" secondItem="MHc-gV-Vs5" secondAttribute="top" id="eoU-PZ-LPf"/>
+                            <constraint firstItem="GXb-iL-4at" firstAttribute="bottom" secondItem="Ucg-fB-BJR" secondAttribute="bottom" constant="20" id="pNq-B8-mOG"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="GXb-iL-4at"/>
+                    </view>
                     <connections>
-                        <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="sceneView" destination="qhT-le-y5R" id="fov-ku-DD7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

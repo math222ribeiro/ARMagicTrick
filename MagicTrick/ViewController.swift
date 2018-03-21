@@ -12,14 +12,36 @@ import ARKit
 
 class ViewController: UIViewController {
   
-  @IBOutlet var sceneView: ARSCNView!
   private var planeNode: SCNNode?
+  @IBOutlet weak var sceneView: ARSCNView!
+  
+  @IBAction func didTapThrowBallButton(_ sender: Any) {
+    guard let currentFrame = sceneView.session.currentFrame else { return }
+    let sphere = SCNSphere(radius: 0.025)
+    sphere.firstMaterial?.diffuse.contents = UIColor.green
+    let node = SCNNode(geometry: sphere)
+    node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: sphere, options: nil))
+    node.physicsBody?.restitution = 0.9
+    sceneView.scene.rootNode.addChildNode(node)
+    
+    var translation = matrix_identity_float4x4
+    translation.columns.3.z = -0.1
+    node.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+//    node.physicsBody?.applyForce(SCNVector3(x: 0, y: 0.05, z: -0.05), asImpulse: true)
+    
+    let original = SCNVector3(x: 0, y: 0, z: -2)
+    let force = simd_make_float4(original.x, original.y, original.z, 0)
+    let rotatedForce = simd_mul(currentFrame.camera.transform, force)
+    
+    let vectorForce = SCNVector3(x:rotatedForce.x, y:rotatedForce.y, z:rotatedForce.z)
+    node.physicsBody?.applyForce(vectorForce, asImpulse: true)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     sceneView.delegate = self
     sceneView.showsStatistics = true
-  
+    
     let scene = SCNScene()
     sceneView.scene = scene
     
@@ -30,7 +52,7 @@ class ViewController: UIViewController {
   @objc
   func handleTap(_ sender: UITapGestureRecognizer) {
     let tapLocation = sender.location(in: sceneView)
-  
+    
     let results = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
     
     if let result = results.first {
@@ -42,6 +64,7 @@ class ViewController: UIViewController {
     let transform = result.worldTransform
     let planePosition = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
     let hatNode = createHatFromScene(planePosition)!
+//    hatNode.scale = SCNVector3(x: 0.08, y: 0.08, z: 0.08)
     sceneView.scene.rootNode.addChildNode(hatNode)
   }
   
@@ -62,7 +85,7 @@ class ViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-  
+    
     let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = .horizontal
     sceneView.session.run(configuration)
@@ -73,12 +96,12 @@ class ViewController: UIViewController {
     
     sceneView.session.pause()
   }
-
+  
 }
 
 extension ViewController: ARSCNViewDelegate {
   func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-  
+    
   }
   
   func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
@@ -103,7 +126,7 @@ extension ViewController: ARSCNViewDelegate {
     plane.materials = [planeMaterial]
     
     let alphaPlane = SCNNode(geometry: plane)
-    alphaPlane.position = SCNVector3Make(planeAnchor.center.x, planeAnchor.center.y, planeAnchor.center.z)
+    alphaPlane.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
     alphaPlane.transform = SCNMatrix4MakeRotation(-Float.pi / 2, 1, 0, 0)
     let shape = SCNPhysicsShape(geometry: plane, options: nil)
     alphaPlane.physicsBody = SCNPhysicsBody(type: .static, shape: shape)
@@ -113,9 +136,9 @@ extension ViewController: ARSCNViewDelegate {
   
   func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
     guard let planeAnchor = anchor as? ARPlaneAnchor,
-          let alphaPlane = node.childNodes.first,
-          let plane = alphaPlane.geometry as? SCNPlane
-    else { return }
+      let alphaPlane = node.childNodes.first,
+      let plane = alphaPlane.geometry as? SCNPlane
+      else { return }
     
     plane.width = CGFloat(planeAnchor.extent.x)
     plane.height = CGFloat(planeAnchor.extent.z)
@@ -123,7 +146,7 @@ extension ViewController: ARSCNViewDelegate {
     let shape = SCNPhysicsShape(geometry: plane, options: nil)
     alphaPlane.physicsBody = SCNPhysicsBody(type: .static, shape: shape)
   }
-
+  
 }
 
 extension ViewController: ARSessionDelegate {
