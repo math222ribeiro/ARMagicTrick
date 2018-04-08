@@ -87,6 +87,7 @@ class ViewController: UIViewController {
     sceneView.scene.rootNode.addChildNode(ambientLightNode)
     
     let omniLightNode = SCNNode()
+    omniLightNode.name = "omni"
     omniLightNode.light = SCNLight()
     omniLightNode.light?.type = .omni
     omniLightNode.light?.color = UIColor.white
@@ -108,6 +109,5 @@ class ViewController: UIViewController {
     
     hatNode = scene.rootNode.childNode(withName: "hat", recursively: true)
   }
-  
   
 }

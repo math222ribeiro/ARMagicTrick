@@ -10,7 +10,11 @@ import ARKit
 
 extension ViewController: ARSCNViewDelegate {
   func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-    
+    if let lightEstimate = sceneView.session.currentFrame?.lightEstimate {
+      if let node = sceneView.scene.rootNode.childNode(withName: "omni", recursively: true) {
+        node.light?.intensity = lightEstimate.ambientIntensity
+      }
+    }
   }
   
   func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
