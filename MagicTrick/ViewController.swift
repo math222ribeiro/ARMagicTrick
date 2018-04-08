@@ -12,8 +12,38 @@ import ARKit
 
 class ViewController: UIViewController {
   
-  private var planeNode: SCNNode?
   @IBOutlet weak var sceneView: ARSCNView!
+  
+  var planeNode: SCNNode?
+  var hatNode: SCNNode!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    sceneView.delegate = self
+    sceneView.showsStatistics = true
+    
+    let scene = SCNScene()
+    sceneView.scene = scene
+    
+    let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    view.addGestureRecognizer(tap)
+    
+    createHatFromScene()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    let configuration = ARWorldTrackingConfiguration()
+    configuration.planeDetection = .horizontal
+    sceneView.session.run(configuration)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    sceneView.session.pause()
+  }
   
   @IBAction func didTapThrowBallButton(_ sender: Any) {
     guard let currentFrame = sceneView.session.currentFrame else { return }
@@ -36,18 +66,6 @@ class ViewController: UIViewController {
     node.physicsBody?.applyForce(vectorForce, asImpulse: true)
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    sceneView.delegate = self
-    sceneView.showsStatistics = true
-    
-    let scene = SCNScene()
-    sceneView.scene = scene
-    
-    let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-    view.addGestureRecognizer(tap)
-  }
-  
   @objc
   func handleTap(_ sender: UITapGestureRecognizer) {
     let tapLocation = sender.location(in: sceneView)
@@ -62,117 +80,15 @@ class ViewController: UIViewController {
   func placeHat(_ result: ARHitTestResult) {
     let transform = result.worldTransform
     let planePosition = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-    let hatNode = createHatFromScene(planePosition)!
-    //    hatNode.scale = SCNVector3(x: 0.08, y: 0.08, z: 0.08)
+    hatNode.position = planePosition
     sceneView.scene.rootNode.addChildNode(hatNode)
   }
   
-  private func createHatFromScene(_ position: SCNVector3) -> SCNNode? {
-    guard let url = Bundle.main.url(forResource: "art.scnassets/hat", withExtension: "scn") else {
-      NSLog("Could not find door scene")
-      return nil
-    }
-    guard let node = SCNReferenceNode(url: url) else { return nil }
-    
-    node.load()
-    
-    // Position scene
-    node.position = position
-    
-    return node
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    let configuration = ARWorldTrackingConfiguration()
-    configuration.planeDetection = .horizontal
-    sceneView.session.run(configuration)
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    sceneView.session.pause()
-  }
-  
-}
-
-extension ViewController: ARSCNViewDelegate {
-  func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-    
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-    if anchor is ARPlaneAnchor {
-      planeNode = SCNNode()
-      return planeNode
+  private func createHatFromScene() {
+    guard let scene = SCNScene(named: "art.scnassets/hat.scn") else {
+      fatalError("hat.scn not found")
     }
     
-    return nil
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-    guard let planeAnchor = anchor as? ARPlaneAnchor else {
-      return
-    }
-    
-    node.addChildNode(createPlaneNode(planeAnchor: planeAnchor))
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-    guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-    
-    node.enumerateChildNodes {
-      (childNode, _) in
-      childNode.removeFromParentNode()
-    }
-    
-    node.addChildNode(createPlaneNode(planeAnchor: planeAnchor))
-    
-  }
-  
-  func createPlaneNode(planeAnchor: ARPlaneAnchor) -> SCNNode {
-    let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
-    
-    let planeMaterial = SCNMaterial()
-    planeMaterial.diffuse.contents = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.3)
-    plane.materials = [planeMaterial]
-    
-    let alphaPlane = SCNNode(geometry: plane)
-    alphaPlane.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
-    alphaPlane.transform = SCNMatrix4MakeRotation(-Float.pi / 2, 1, 0, 0)
-    let shape = SCNPhysicsShape(geometry: plane, options: nil)
-    alphaPlane.physicsBody = SCNPhysicsBody(type: .static, shape: shape)
-    return alphaPlane
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-    guard anchor is ARPlaneAnchor else {
-      return
-    }
-    node.enumerateChildNodes {
-      (childNode, _) in
-      childNode.removeFromParentNode()
-    }
-  }
-}
-
-extension ViewController: ARSessionDelegate {
-  
-  func session(_ session: ARSession, didFailWithError error: Error) {
-    
-  }
-  
-  func sessionWasInterrupted(_ session: ARSession) {
-    
-  }
-  
-  func sessionInterruptionEnded(_ session: ARSession) {
-    
-  }
-  
-  func session(_ session: ARSession, didUpdate frame: ARFrame) {
-    
+    hatNode = scene.rootNode.childNode(withName: "hat", recursively: true)
   }
 }
