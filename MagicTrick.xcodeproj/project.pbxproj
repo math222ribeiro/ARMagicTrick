@@ -41,6 +41,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C07D2FDF207A8B650012A4B2 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C0D0F49D2061710700D432B6 /* ViewController.swift */,
+				C07D2FDB207A87D10012A4B2 /* ViewController+ARSessionDelegate.swift */,
+				C07D2FDD207A88120012A4B2 /* ViewController+ARSCNViewDelegate.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		C0D0F48D2061710700D432B6 = {
 			isa = PBXGroup;
 			children = (
@@ -60,15 +70,13 @@
 		C0D0F4982061710700D432B6 /* MagicTrick */ = {
 			isa = PBXGroup;
 			children = (
+				C07D2FDF207A8B650012A4B2 /* Controller */,
 				C0D0F4992061710700D432B6 /* AppDelegate.swift */,
 				C0D0F49B2061710700D432B6 /* art.scnassets */,
-				C0D0F49D2061710700D432B6 /* ViewController.swift */,
 				C0D0F49F2061710700D432B6 /* Main.storyboard */,
 				C0D0F4A22061710700D432B6 /* Assets.xcassets */,
 				C0D0F4A42061710700D432B6 /* LaunchScreen.storyboard */,
 				C0D0F4A72061710700D432B6 /* Info.plist */,
-				C07D2FDB207A87D10012A4B2 /* ViewController+ARSessionDelegate.swift */,
-				C07D2FDD207A88120012A4B2 /* ViewController+ARSCNViewDelegate.swift */,
 			);
 			path = MagicTrick;
 			sourceTree = "<group>";

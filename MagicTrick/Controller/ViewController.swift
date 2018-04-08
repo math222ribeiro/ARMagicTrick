@@ -28,6 +28,8 @@ class ViewController: UIViewController {
     let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     view.addGestureRecognizer(tap)
     
+    setupLights()
+    
     createHatFromScene()
   }
   
@@ -77,6 +79,21 @@ class ViewController: UIViewController {
     }
   }
   
+  func setupLights() {
+    let ambientLightNode = SCNNode()
+    ambientLightNode.light = SCNLight()
+    ambientLightNode.light?.type = .ambient
+    ambientLightNode.light?.intensity = 500
+    sceneView.scene.rootNode.addChildNode(ambientLightNode)
+    
+    let omniLightNode = SCNNode()
+    omniLightNode.light = SCNLight()
+    omniLightNode.light?.type = .omni
+    omniLightNode.light?.color = UIColor.white
+    omniLightNode.light?.intensity = 500
+    sceneView.scene.rootNode.addChildNode(omniLightNode)
+  }
+  
   func placeHat(_ result: ARHitTestResult) {
     let transform = result.worldTransform
     let planePosition = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
@@ -91,4 +108,6 @@ class ViewController: UIViewController {
     
     hatNode = scene.rootNode.childNode(withName: "hat", recursively: true)
   }
+  
+  
 }
