@@ -17,6 +17,7 @@ class ViewController: UIViewController {
   
   var planeNode: SCNNode?
   var hatNode: SCNNode!
+  var hidden = true
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -72,7 +73,8 @@ class ViewController: UIViewController {
   @IBAction func didTapMagicButton(_ sender: Any) {
     sceneView.scene.rootNode.enumerateChildNodes {node, _ in
       if hatBoundingBoxContains(node.presentation.position) {
-        node.removeFromParentNode()
+        node.isHidden = hidden
+        hidden = !hidden
       }
     }
   }
