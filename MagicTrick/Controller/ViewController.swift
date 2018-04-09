@@ -13,6 +13,7 @@ import ARKit
 class ViewController: UIViewController {
   
   @IBOutlet weak var sceneView: ARSCNView!
+  @IBOutlet weak var trackingLabel: UILabel!
   
   var planeNode: SCNNode?
   var hatNode: SCNNode!
@@ -21,6 +22,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     sceneView.delegate = self
     sceneView.showsStatistics = true
+    sceneView.debugOptions = [.showPhysicsShapes]
     
     let scene = SCNScene()
     sceneView.scene = scene
@@ -110,4 +112,15 @@ class ViewController: UIViewController {
     hatNode = scene.rootNode.childNode(withName: "hat", recursively: true)
   }
   
+  public func resetTracking() {
+    for node in sceneView.scene.rootNode.childNodes {
+      node.removeFromParentNode()
+    }
+    
+    planeNode = nil
+    
+    let configuration = ARWorldTrackingConfiguration()
+    configuration.planeDetection = .horizontal
+    sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+  }
 }
