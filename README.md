@@ -7,7 +7,9 @@ Magic trick app is an AR app that consists of placing a 3D hat on the real world
   * Look around to detect horizontal planes
   * Tap on the screen to place the hat
   * Tap on the Throw Ball button to throw ball on the scene
-  * Tap on the Magic Button to make the balls inside the hat disappear
+  * Tap on the Magic button to make the balls inside the hat disappear
+  
+  You can tap on the screen again to change the position of the hat
   
 ## Requirements
   * iOS 11.0+ capable of running ARKit
