@@ -21,8 +21,6 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     sceneView.delegate = self
-    sceneView.showsStatistics = true
-    //sceneView.debugOptions = [.showPhysicsShapes]
     
     let scene = SCNScene()
     sceneView.scene = scene
