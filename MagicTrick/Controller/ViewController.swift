@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     sceneView.delegate = self
     sceneView.showsStatistics = true
-    sceneView.debugOptions = [.showPhysicsShapes]
+    //sceneView.debugOptions = [.showPhysicsShapes]
     
     let scene = SCNScene()
     sceneView.scene = scene
@@ -40,6 +40,7 @@ class ViewController: UIViewController {
     
     let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = .horizontal
+    configuration.worldAlignment = .gravity
     sceneView.session.run(configuration)
   }
   
@@ -68,6 +69,14 @@ class ViewController: UIViewController {
     
     let vectorForce = SCNVector3(x:rotatedForce.x, y:rotatedForce.y, z:rotatedForce.z)
     node.physicsBody?.applyForce(vectorForce, asImpulse: true)
+  }
+  
+  @IBAction func didTapMagicButton(_ sender: Any) {
+    sceneView.scene.rootNode.enumerateChildNodes {node, _ in
+      if hatBoundingBoxContains(node.presentation.position) {
+        node.removeFromParentNode()
+      }
+    }
   }
   
   @objc
@@ -122,5 +131,20 @@ class ViewController: UIViewController {
     let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = .horizontal
     sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+  }
+  
+  func hatBoundingBoxContains(_ point: SCNVector3) -> Bool {
+    let node = self.hatNode!
+    
+    let min = node.convertPosition((node.boundingBox.min), to: sceneView.scene.rootNode)
+    let max = node.convertPosition((node.boundingBox.max), to: sceneView.scene.rootNode)
+    
+    return
+      point.x > min.x  &&
+        point.y > min.y  &&
+        point.z > min.z  &&
+        point.x < max.x &&
+        point.y < max.y &&
+        point.z < max.z
   }
 }

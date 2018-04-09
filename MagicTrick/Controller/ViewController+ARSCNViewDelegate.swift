@@ -46,6 +46,16 @@ extension ViewController: ARSCNViewDelegate {
     
   }
   
+  func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+    guard anchor is ARPlaneAnchor else {
+      return
+    }
+    node.enumerateChildNodes {
+      (childNode, _) in
+      childNode.removeFromParentNode()
+    }
+  }
+  
   func createPlaneNode(planeAnchor: ARPlaneAnchor) -> SCNNode {
     let plane = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
     
@@ -59,16 +69,6 @@ extension ViewController: ARSCNViewDelegate {
     let shape = SCNPhysicsShape(geometry: plane, options: nil)
     alphaPlane.physicsBody = SCNPhysicsBody(type: .static, shape: shape)
     return alphaPlane
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-    guard anchor is ARPlaneAnchor else {
-      return
-    }
-    node.enumerateChildNodes {
-      (childNode, _) in
-      childNode.removeFromParentNode()
-    }
   }
 }
 

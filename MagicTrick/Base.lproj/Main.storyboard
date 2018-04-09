@@ -29,16 +29,29 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ucg-fB-BJR">
-                                <rect key="frame" x="16" y="597" width="97" height="50"/>
+                                <rect key="frame" x="16" y="597" width="100" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="A3T-Fb-EIw"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="97" id="RKs-Y5-0bi"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="RKs-Y5-0bi"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                 <state key="normal" title="Throw Ball"/>
                                 <connections>
                                     <action selector="didTapThrowBallButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="dPU-qX-oZu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSM-na-WxF">
+                                <rect key="frame" x="259" y="597" width="100" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="gOZ-ZF-ecg"/>
+                                    <constraint firstAttribute="height" constant="50" id="o3l-yL-kfP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" title="Magic"/>
+                                <connections>
+                                    <action selector="didTapMagicButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="9Hw-ZY-usq"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -52,6 +65,8 @@
                             <constraint firstItem="GXb-iL-4at" firstAttribute="trailing" secondItem="zjv-Dl-u0q" secondAttribute="trailing" constant="16" id="dKz-fq-eCo"/>
                             <constraint firstItem="Ucg-fB-BJR" firstAttribute="leading" secondItem="GXb-iL-4at" secondAttribute="leading" constant="16" id="dUH-as-RN8"/>
                             <constraint firstItem="qhT-le-y5R" firstAttribute="top" secondItem="MHc-gV-Vs5" secondAttribute="top" id="eoU-PZ-LPf"/>
+                            <constraint firstItem="GXb-iL-4at" firstAttribute="trailing" secondItem="dSM-na-WxF" secondAttribute="trailing" constant="16" id="hYJ-Wv-2XZ"/>
+                            <constraint firstItem="GXb-iL-4at" firstAttribute="bottom" secondItem="dSM-na-WxF" secondAttribute="bottom" constant="20" id="nJs-dK-XJG"/>
                             <constraint firstItem="GXb-iL-4at" firstAttribute="bottom" secondItem="Ucg-fB-BJR" secondAttribute="bottom" constant="20" id="pNq-B8-mOG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="GXb-iL-4at"/>
