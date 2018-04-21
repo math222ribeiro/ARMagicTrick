@@ -56,6 +56,7 @@ class ViewController: UIViewController {
     let node = SCNNode(geometry: sphere)
     node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: sphere, options: nil))
     node.physicsBody?.restitution = 0.9
+    node.name = "ball"
     sceneView.scene.rootNode.addChildNode(node)
     
     var translation = matrix_identity_float4x4
@@ -71,11 +72,20 @@ class ViewController: UIViewController {
   }
   
   @IBAction func didTapMagicButton(_ sender: Any) {
+    var shouldChange = false
     sceneView.scene.rootNode.enumerateChildNodes {node, _ in
-      if hatBoundingBoxContains(node.presentation.position) {
-        node.isHidden = hidden
-        hidden = !hidden
+      if hatBoundingBoxContains(node.presentation.position) && node.name == "ball" {
+        shouldChange = true
+        if hidden {
+          node.geometry?.firstMaterial?.diffuse.contents = UIColor.clear
+        } else {
+          node.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+        }
       }
+    }
+    
+    if shouldChange {
+      hidden = !hidden
     }
   }
   
@@ -109,8 +119,20 @@ class ViewController: UIViewController {
   func placeHat(_ result: ARHitTestResult) {
     let transform = result.worldTransform
     let planePosition = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+    
     hatNode.position = planePosition
     sceneView.scene.rootNode.addChildNode(hatNode)
+    
+    let floorNode = SCNNode(geometry: SCNFloor())
+    floorNode.position = planePosition
+    floorNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(geometry: floorNode.geometry!, options: nil))
+    floorNode.position = planePosition
+    let material = SCNMaterial()
+    material.diffuse.contents = UIColor.clear
+    floorNode.geometry!.materials = [material]
+    sceneView.scene.rootNode.addChildNode(floorNode)
+    
+    planeNode?.isHidden = true
   }
   
   private func createHatFromScene() {
@@ -131,20 +153,21 @@ class ViewController: UIViewController {
     let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = .horizontal
     sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    setupLights()
   }
   
   func hatBoundingBoxContains(_ point: SCNVector3) -> Bool {
-    let node = self.hatNode!
+    let node = self.hatNode.childNode(withName: "body", recursively: true)!
     
     let min = node.convertPosition((node.boundingBox.min), to: sceneView.scene.rootNode)
     let max = node.convertPosition((node.boundingBox.max), to: sceneView.scene.rootNode)
     
     return
-      point.x > min.x  &&
-        point.y > min.y  &&
-        point.z > min.z  &&
-        point.x < max.x &&
-        point.y < max.y &&
-        point.z < max.z
+      point.x < 0.99 * max.x &&
+        point.x > 0.99 * min.x &&
+        point.y < 0.99 * max.y &&
+        point.y > 0.99 * min.y &&
+        point.z < 0.99 * max.z &&
+        point.z > 0.99 * min.z
   }
 }

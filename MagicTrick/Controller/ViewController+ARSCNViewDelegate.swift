@@ -43,7 +43,6 @@ extension ViewController: ARSCNViewDelegate {
     }
     
     node.addChildNode(createPlaneNode(planeAnchor: planeAnchor))
-    
   }
   
   func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
