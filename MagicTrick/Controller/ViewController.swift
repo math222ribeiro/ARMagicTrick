@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     let scene = SCNScene()
     sceneView.scene = scene
     
+    // Gesture to place the hat on the scene
     let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
     view.addGestureRecognizer(tap)
     
@@ -51,8 +52,10 @@ class ViewController: UIViewController {
   
   @IBAction func didTapThrowBallButton(_ sender: Any) {
     guard let currentFrame = sceneView.session.currentFrame else { return }
+    
     let sphere = SCNSphere(radius: 0.025)
     sphere.firstMaterial?.diffuse.contents = UIColor.green
+    
     let node = SCNNode(geometry: sphere)
     node.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: sphere, options: nil))
     node.physicsBody?.restitution = 0.9
@@ -72,8 +75,10 @@ class ViewController: UIViewController {
   }
   
   @IBAction func didTapMagicButton(_ sender: Any) {
+    // Used to see if the magic happended
     var shouldChange = false
-    sceneView.scene.rootNode.enumerateChildNodes {node, _ in
+    
+    sceneView.scene.rootNode.enumerateChildNodes { node, _ in
       if hatBoundingBoxContains(node.presentation.position) && node.name == "ball" {
         shouldChange = true
         if hidden {
@@ -84,6 +89,7 @@ class ViewController: UIViewController {
       }
     }
     
+    // Change the state of the balls
     if shouldChange {
       hidden = !hidden
     }
@@ -162,6 +168,7 @@ class ViewController: UIViewController {
     let min = node.convertPosition((node.boundingBox.min), to: sceneView.scene.rootNode)
     let max = node.convertPosition((node.boundingBox.max), to: sceneView.scene.rootNode)
     
+    // Algorithm taken from Udacity AR Slack community
     return
       point.x < 0.99 * max.x &&
         point.x > 0.99 * min.x &&
